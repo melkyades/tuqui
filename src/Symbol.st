@@ -29,18 +29,6 @@ Symbol class >> fromBytes: aByteArray [
 	^string replaceBytesFrom: 1 to: n with: aByteArray startingAt: 1
 ]
 
-{ #category : #initialization }
-Symbol class >> initializeSymbolTable [
-	| policy set |
-	self == Symbol ifFalse: [^self].
-	policy := HashTablePolicy new
-		storesAssociations: false;
-		bucketClass: OpenHashTable;
-		useStringHash.
-	set := Set new: 5000 using: policy.
-	SymbolTable := set
-]
-
 { #category : #accessing }
 Symbol class >> intern: aString [
 	| symbol existing |
@@ -56,11 +44,6 @@ Symbol class >> intern: aString [
 { #category : #'instance creation' }
 Symbol class >> new: ignoreArgument [
 	^self shouldNotImplement
-]
-
-{ #category : #private }
-Symbol class >> startUp [
-	SymbolTable beWeak
 ]
 
 { #category : #private }
