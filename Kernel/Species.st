@@ -14,17 +14,16 @@ Class {
 		'instanceVariables'
 	],
 	#classVars : [
-		'Flags'
+		'Variable',
+		'Pointers'
 	],
 	#category : #Kernel
 }
 
 { #category : #initialization }
-Species class >> initializeFormatFlags [
-	Flags := self addNamespace.
-	Flags
-		at: #Variable put: 16r2000;
-		at: #Pointers put: 16r4000
+Species class >> initializeClassVars [
+	Variable := 16r2000.
+	Pointers := 16r4000
 ]
 
 { #category : #initialization }
@@ -383,7 +382,7 @@ Species >> nil: size slotsOf: object [
 
 { #category : #unclassified }
 Species >> primitiveNew [
-	^self memory newPointers: instanceBehavior size: self instSize
+	<primitive: NewPointers>
 ]
 
 { #category : #unclassified }
@@ -397,15 +396,12 @@ Species >> primitiveNew: size [
 
 { #category : #unclassified }
 Species >> primitiveNewBytes: size [
-	^self memory newArrayedBytes: instanceBehavior size: size
+	<primitive: NewBytes>
 ]
 
 { #category : #unclassified }
 Species >> primitiveNewPointers: size [
-	^self memory
-		newArrayedPointers: instanceBehavior
-		size: size
-		named: self instSize > 0
+	<primitive: NewArrayedPointers>
 ]
 
 { #category : #printing }

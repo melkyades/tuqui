@@ -48,15 +48,6 @@ Association >> printOn: aStream [
 	value printOn: aStream
 ]
 
-{ #category : #printing }
-Association >> storeOn: aStream [
-	aStream nextPut: $(.
-	key storeOn: aStream.
-	aStream nextPutAll: ' -> '.
-	value storeOn: aStream.
-	aStream nextPut: $)
-]
-
 { #category : #accessing }
 Association >> value [
 	^value

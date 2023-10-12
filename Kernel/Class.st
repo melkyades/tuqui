@@ -10,8 +10,7 @@ Class {
 	#instVars : [
 		'name',
 		'subclasses',
-		'namespaces',
-		'module'
+		'classVars'
 	],
 	#category : #Kernel
 }
@@ -19,60 +18,7 @@ Class {
 Class class >> newSubclassOf: aClass [
 	| meta |
 	meta := Metaclass new beSubclassOf: aClass class.
-	^meta instanceClass module: Kernel; initializeFrom: aClass.
-]
-
-{ #category : #lookup }
-Class >> _lookupName: aSymbol [
-	| current vars result |
-	current := self.
-	[ 
-		vars := current classVariables.
-		vars == nil ifFalse: [
-			result := vars _namespaceLookup: aSymbol.
-			result == nil ifFalse: [^result].
-		].
-		current := current superclass.
-		current == nil] whileFalse.
-	^module _namespaceLookup: aSymbol.
-]
-
-{ #category : #services }
-Class >> addNamespace [
-	^self addNamespace: Namespace new.
-]
-
-{ #category : #services }
-Class >> addNamespace: aNamespace [
-	"
-		first namespace are class variables, remaining ones are local pools of the class
-	"
-	namespaces ifNil: [namespaces := Array with: Namespace new].
-	namespaces := namespaces copyWith: aNamespace.
-	^aNamespace
-]
-
-{ #category : #services }
-Class >> addNamespaceAs: aSymbol [
-	| names |
-	names := self addNamespace.
-	^self classVarNamed: aSymbol put: names
-]
-
-{ #category : #services }
-Class >> beDeleted [
-	| behavior md |
-	self behavior: DeletedClass instanceBehavior.
-	name := ('Deleted ' , self symbol) asSymbol.
-	behavior := self instanceBehavior.
-	md := MethodDictionary new.
-	self withAllSuperclasses reverseDo: [:c | 
-		c selectors do: [:s | | cm |
-			cm := c >> s.
-			cm notNil ifTrue: [md at: s put: cm]]].
-	behavior methods: md; next: nil.
-	instanceVariables := self allInstVarNames.
-	superclass := ProtoObject
+	^meta instanceClass; initializeFrom: aClass.
 ]
 
 { #category : #private }
@@ -96,50 +42,21 @@ Class >> canBeDeleted [
 
 { #category : #accessing }
 Class >> classVariables [
-	^namespaces isEmpty ifTrue: [Namespace new] ifFalse: [namespaces first]
-]
-
-{ #category : #accessing }
-Class >> classVariables: aNamespace [
-	namespaces isEmpty
-		ifTrue: [namespaces := Array with: aNamespace]
-		ifFalse: [namespaces at: 1 put: aNamespace].
-	(aNamespace isEmpty and: [namespaces size = 1])
-		ifTrue: [namespaces := #()]
+	^classVars
 ]
 
 { #category : #accessing }
 Class >> classVarNamed: aString put: anObject [
-	^namespaces first at: aString put: anObject
+	| assoc |
+	assoc := classVars
+				detect: [:as | as key == aString]
+				ifNone: [assoc := aString -> anObject. ^classVars := classVars, assoc].
+	assoc value: anObject
 ]
 
 { #category : #accessing }
 Class >> classVarNames [
-	^self classVariables keys
-]
-
-
-{ #category : #accessing }
-Class >> classVarNames: aCollection [
-	| new old |
-	new := Namespace new.
-	old := sef classVariables.
-	
-	aCollection do: [:k | | assoc |
-		assoc := old associationAt: k ifAbsent: [k -> nil].
-		new add: assoc].
-	
-	self classVariables: new.
-]
-
-{ #category : #accessing }
-Class >> comment [
-	^self organization isNil ifTrue: [''] ifFalse: [self organization comment]
-]
-
-{ #category : #accessing }
-Class >> comment: aString [
-	self organization comment: aString
+	^classVars collect: [:assoc | assoc keys]
 ]
 
 { #category : #removing }
@@ -227,16 +144,6 @@ Class >> isDeleted [
 ]
 
 { #category : #accessing }
-Class >> module [
-	^module
-]
-
-{ #category : #accessing }
-Class >> module: aModule [
-	module := aModule
-]
-
-{ #category : #accessing }
 Class >> name [
 	^name asString
 ]
@@ -244,23 +151,6 @@ Class >> name [
 { #category : #accessing }
 Class >> name: aSymbol [
 	name := aSymbol asSymbol
-]
-
-{ #category : #services }
-Class >> namespaces [
-	^namespaces
-]
-
-{ #category : #testing }
-Class >> needsReinstallation [
-	self hasClassBehavior ifFalse: [^true].
-	superclass isNil ifTrue: [^false].
-	self instSize - self instVarNames size = superclass instSize
-		ifFalse: [^true].
-	self class instSize - self class instVarNames size
-		= self class superclass instSize
-		ifFalse: [^true].
-	^self installer shouldRecomputeBehavior
 ]
 
 { #category : #accessing }
@@ -278,13 +168,6 @@ Class >> pointer: pointers variable: variable [
 		flags := flags & bits.
 		self allSubclasses
 			do: [:cls | cls format: cls format & bits bitInvert | flags]]
-]
-
-{ #category : #removing }
-Class >> removeFromSystem [
-	self allInstances notEmpty
-		ifTrue: [^self error: 'There are instances of this class'].
-	self delete
 ]
 
 { #category : #'add/remove' }
@@ -325,9 +208,3 @@ Class >> subspeciesDo: aBlock [
 	subclasses isNil ifTrue: [^self].
 	self subspecies do: aBlock
 ]
-
-{ #category : #accessing }
-Class >> symbol [
-	^name
-]
-
