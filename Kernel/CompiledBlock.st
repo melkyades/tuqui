@@ -11,11 +11,16 @@ Class {
 	#type : #variable,
 	#instVars : [
 		'format',
-		'optimizedCode',
+		'executableCode',
 		'method'
 	],
 	#classVars : [
-		'Flags'
+		'ArgCount',
+		'TempCount',
+		'Id',
+		'CapturesSelf',
+		'CapturesHome',
+		'EnvCount'
 	],
 	#category : #Kernel
 }
@@ -39,20 +44,14 @@ CompiledBlock class >> fromArray: anArray [
 ]
 
 { #category : #initialization }
-CompiledBlock class >> initializeFormatFlags [
-	"
-	self initializeFormatFlags.
-	self compileAll.
-	self class compileAll
-	"
-	Flags := self addNamespace
-		at: #ArgCount put: (1 thru: 6);
-		at: #TempCount put: (7 thru: 14);
-		at: #Id put: (15 thru: 22);
-		at: #CapturesSelf put: (1 bitShift: 23 - 1);
-		at: #CapturesHome put: (1 bitShift: 24 - 1);
-		at: #EnvCount put: (25 thru: 31);
-		yourself.
+CompiledBlock class >> initializeClassVars [
+
+	ArgCount := (1 thru: 6).
+	TempCount := (7 thru: 14).
+	Id := (15 thru: 22).
+	CapturesSelf := (1 bitShift: 23 - 1).
+	CapturesHome := (1 bitShift: 24 - 1).
+	EnvCount := (25 thru: 31).
 ]
 
 { #category : #initialization }
@@ -110,7 +109,7 @@ CompiledBlock >> bindMethod: aCompiledMethod [
 
 { #category : #accessing }
 CompiledBlock >> blockCode [
-	^optimizedCode code
+	^executableCode code
 ]
 
 { #category : #accessing }
@@ -119,16 +118,16 @@ CompiledBlock >> blockExecutableCode [
 	required to let the optimizing compiler inline this code
 	without confusing with CompiledMethod>>#executableCode
 	"
-	^optimizedCode
+	^executableCode
 ]
 
 { #category : #accessing }
-CompiledBlock >> blockOptimizedCode [
+CompiledBlock >> blockExecutableCode [
 	"
 	required to let the optimizing compiler inline this code
-	without confusing with CompiledMethod>>#optimizedCode
+	without confusing with CompiledMethod>>#executableCode
 	"
-	^optimizedCode
+	^executableCode
 ]
 
 { #category : #accessing }
@@ -175,8 +174,8 @@ CompiledBlock >> initialize [
 ]
 
 { #category : #accessing }
-CompiledBlock >> invalidateOptimizedCode [
-	optimizedCode := nil
+CompiledBlock >> invalidateExecutableCode [
+	executableCode := nil
 ]
 
 { #category : #testing }
@@ -229,14 +228,14 @@ CompiledBlock >> newClosure [
 ]
 
 { #category : #comparing }
-CompiledBlock >> optimizedCode [
-	^optimizedCode
+CompiledBlock >> executableCode [
+	^executableCode
 ]
 
 { #category : #comparing }
-CompiledBlock >> optimizedCode: anObject [
+CompiledBlock >> executableCode: anObject [
 	anObject block: self.
-	optimizedCode := anObject
+	executableCode := anObject
 ]
 
 { #category : #comparing }

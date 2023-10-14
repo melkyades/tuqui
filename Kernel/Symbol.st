@@ -32,7 +32,6 @@ Symbol class >> fromBytes: aByteArray [
 { #category : #accessing }
 Symbol class >> intern: aString [
 	| symbol existing |
-	aString isUnicode ifTrue: [^WideSymbol intern: aString].
 	symbol := aString bytes changeClassTo: self.
 	existing := SymbolTable lookup: symbol.
 	existing == nil ifTrue: [

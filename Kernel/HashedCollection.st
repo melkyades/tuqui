@@ -11,16 +11,8 @@ Class {
 		'tally',
 		'table'
 	],
-	#classVars : [
-		'Policies'
-	],
 	#category : #Kernel
 }
-
-{ #category : #private }
-HashedCollection class >> initializePolicies [
-	Policies := WeakIdentityDictionary new
-]
 
 { #category : #'instance creation' }
 HashedCollection class >> new [
@@ -35,22 +27,8 @@ HashedCollection class >> new: anInteger [
 ]
 
 { #category : #'instance creation' }
-HashedCollection class >> new: anInteger using: aHashedCollectionPolicy [
-	| size |
-	size := self sizeFor: anInteger.
-	^self basicNew
-		onTable: (aHashedCollectionPolicy contentOfSize: size);
-		usePolicy: aHashedCollectionPolicy
-]
-
-{ #category : #'instance creation' }
 HashedCollection class >> on: aHashTable [
 	^self new onTable: aHashTable
-]
-
-{ #category : #private }
-HashedCollection class >> registerPolicy: aHashTablePolicy for: aHashedCollection [
-	Policies at: aHashedCollection put: aHashTablePolicy
 ]
 
 { #category : #private }

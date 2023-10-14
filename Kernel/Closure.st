@@ -30,22 +30,14 @@ Closure class >> initializeIndexes [
 Closure class >> newFrom: aBlock [
 	| size closure |
 	size := aBlock environmentCount + self instSize.
-	closure := self allocate: size * WordSize size: size.
-	closure _beNamed; _beArrayed.
-	self nil: size slotsOf: closure.
-	closure _basicAt: 1 put: aBlock.
+	closure := self new: size.
+	closure basicAt: 1 put: aBlock.
 	^closure
 ]
 
 { #category : #private }
 Closure class >> receiverIndex [
 	^ReceiverIndex
-]
-
-{ #category : #handling }
-Closure >> _return: result [
-	self canReturn ifFalse: [^self cannotReturn].
-	^ActiveProcess returnTo: homeFrame methodFrame with: result
 ]
 
 { #category : #accessing }
@@ -114,11 +106,6 @@ Closure >> do: aClosure [
 ]
 
 { #category : #handling }
-Closure >> ensure: aBlock [
-	^ActiveProcess evaluate: self ensuring: aBlock
-]
-
-{ #category : #handling }
 Closure >> evaluate [
 	^self value
 ]
@@ -184,24 +171,6 @@ Closure >> hasMethodEnvironment [
 	^self size >= ParentEnvironmentIndex
 ]
 
-{ #category : #evaluating }
-Closure >> ifCurtailed: exceptionClosure [
-	| success |
-	success := false.
-	^[
-		self value.
-		success := true]
-		ensure: [success ifFalse: [exceptionClosure value]]
-]
-
-{ #category : #testing }
-Closure >> isBlockClosure [
-	"
-	FIXME: fix senders and remove me
-	"
-	^true
-]
-
 { #category : #testing }
 Closure >> isClosure [
 	^true
@@ -257,22 +226,6 @@ Closure >> numArgs [
 	^self argumentCount
 ]
 
-{ #category : #handling }
-Closure >> on: aClass do: aClosure [
-	^ExceptionHandler handle: aClass with: aClosure during: self
-]
-
-{ #category : #handling }
-Closure >> on: exception1
-do: closure1
-on: exception2
-do: closure2 [
-	^self on: exception1 , exception2 do: [:ex | | handler |
-		handler := (exception1 includesException: ex)
-			ifTrue: [closure1]
-			ifFalse: [closure2].
-		handler evaluateWith: ex]
-]
 
 { #category : #handling }
 Closure >> printOn: aStream [
@@ -309,15 +262,6 @@ Closure >> repeatUntil: aBlock [
 		aBlock value] whileFalse
 ]
 
-{ #category : #handling }
-Closure >> spawnAndWait [
-	| s result |
-	s := Semaphore new.
-	[result := self ensure: [s signal]] fork.
-	s wait.
-	^result
-]
-
 { #category : #accessing }
 Closure >> tempCount [
 	^block tempCount
@@ -330,22 +274,22 @@ Closure >> templateIndex [
 
 { #category : #handling }
 Closure >> value [
-	self errorVMSpecific
+	<primitive: Value>
 ]
 
 { #category : #handling }
 Closure >> value: value [
-	self errorVMSpecific
+	<primitive: ValueWith>
 ]
 
 { #category : #handling }
 Closure >> value: first value: second [
-	self errorVMSpecific
+	<primitive: ValueWithWith>
 ]
 
 { #category : #handling }
 Closure >> value: first value: second value: third [
-	self errorVMSpecific
+	<primitive: ValueWithWithWith>
 ]
 
 { #category : #evaluating }
@@ -363,7 +307,8 @@ Closure >> valueSelector [
 
 { #category : #handling }
 Closure >> valueWithArguments: arguments [
-	self errorVMSpecific
+	<primitive: ValueWithArguments>
+
 ]
 
 { #category : #handling }
@@ -373,7 +318,8 @@ Closure >> whileFalse [
 
 { #category : #handling }
 Closure >> whileFalse: aBlock [
-	self errorVMSpecific
+	<primitive: WhileFalse>
+
 ]
 
 { #category : #handling }
@@ -383,6 +329,6 @@ Closure >> whileTrue [
 
 { #category : #handling }
 Closure >> whileTrue: aBlock [
-	self errorVMSpecific
+	<primitive: WhileTrue>
 ]
 

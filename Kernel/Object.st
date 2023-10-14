@@ -228,14 +228,14 @@ Object >> methodFor: aSymbol in: aClass [
 Object >> objectDeepCopy [
 	| class ivars copy |
 	class := self class.
-	class _instancesAreFixed
+	class instancesAreFixed
 		ifTrue: [
 			ivars := 0.
 			copy := class basicNew]
 		ifFalse: [
 			ivars := self basicSize.
 			copy := class basicNew: ivars].
-	class _instancesHavePointers
+	class instancesHavePointers
 		ifTrue: [
 			1 to: ivars + class instSize do: [:index | | ivar |
 				ivar := self instVarAt: index.
@@ -373,7 +373,7 @@ Object >> shallowCopyTo: anObject [
 	1 to: n do: [:index | | slot |
 		slot := self instVarAt: index.
 		anObject instVarAt: index put: slot].
-	self class _instancesAreArrayed ifTrue: [
+	self class instancesAreArrayed ifTrue: [
 		n := self basicSize min: anObject basicSize.
 		1 to: n do: [:index | | slot |
 			slot := self basicAt: index.

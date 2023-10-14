@@ -32,17 +32,17 @@ Species class >> maxInstVarCount [
 ]
 
 { #category : #testing }
-Species >> _instancesAreArrayed [
+Species >> instancesAreArrayed [
 	^format & Variable = Variable
 ]
 
 { #category : #testing }
-Species >> _instancesAreFixed [
+Species >> instancesAreFixed [
 	^format & Variable = 0
 ]
 
 { #category : #testing }
-Species >> _instancesHavePointers [
+Species >> instancesHavePointers [
 	^format & Pointers != 0
 ]
 
@@ -87,20 +87,6 @@ Species >> allInstances [
 { #category : #queries }
 Species >> allInstVarNames [
 	^(self withAllSuperclasses reversed gather: [:class | class instVarNames]) asArray
-]
-
-{ #category : #'instance creation' }
-Species >> allocate: byteSize size: size [
-	| headerSize totalSize buffer object extended |
-	extended := size > 255.
-	headerSize := extended ifTrue: [16] ifFalse: [8].
-	totalSize := headerSize + byteSize.
-	buffer := self memory allocate: totalSize.
-	object := (buffer + headerSize _asPointer) _asObject.
-	object
-		_basicULongAt: _Behavior put: self instanceBehavior;
-		initializeExtended: extended contentSize: size.
-	^object
 ]
 
 { #category : #queries }
@@ -163,7 +149,7 @@ Species >> allSuperclassesDo: aBlock [
 
 { #category : #'instance creation' }
 Species >> basicNew [
-	^self _instancesAreArrayed
+	^self instancesAreArrayed
 		ifTrue: [self primitiveNew: 0]
 		ifFalse: [self primitiveNew]
 ]
@@ -296,12 +282,12 @@ Species >> instanceBehavior: aBehavior [
 
 { #category : #testing }
 Species >> instancesAreArrayed [
-	^self _instancesAreArrayed
+	^self instancesAreArrayed
 ]
 
 { #category : #testing }
 Species >> instancesHavePointers [
-	^self _instancesHavePointers
+	^self instancesHavePointers
 ]
 
 { #category : #services }
@@ -332,7 +318,7 @@ Species >> instVarNames: aCollection [
 
 { #category : #testing }
 Species >> isBytes [
-	^self _instancesHavePointers not
+	^self instancesHavePointers not
 ]
 
 { #category : #testing }
@@ -342,14 +328,14 @@ Species >> isSpecies [
 
 { #category : #testing }
 Species >> isVariable [
-	^self _instancesAreArrayed
+	^self instancesAreArrayed
 ]
 
 { #category : #services }
 Species >> kindOfSubclass [
-	self _instancesAreFixed ifTrue: [^'subclass:'].
+	self instancesAreFixed ifTrue: [^'subclass:'].
 	self isBytes ifTrue: [^'variableByteSubclass:'].
-	self _instancesHavePointers ifTrue: [^'variableSubclass:'].
+	self instancesHavePointers ifTrue: [^'variableSubclass:'].
 	self error: 'invalid type of subclass'
 ]
 
@@ -365,7 +351,7 @@ Species >> methodDictionary [
 
 { #category : #'instance creation' }
 Species >> new [
-	^self _instancesAreArrayed
+	^self instancesAreArrayed
 		ifTrue: [self primitiveNew: 0]
 		ifFalse: [self primitiveNew]
 ]
@@ -373,11 +359,6 @@ Species >> new [
 { #category : #'instance creation' }
 Species >> new: anInteger [
 	^self primitiveNew: anInteger
-]
-
-{ #category : #'instance creation' }
-Species >> nil: size slotsOf: object [
-	object _nilSlots: size
 ]
 
 { #category : #unclassified }
@@ -388,8 +369,8 @@ Species >> primitiveNew [
 { #category : #unclassified }
 Species >> primitiveNew: size [
 	size _isSmallInteger ifFalse: [self error: 'invalid size'].
-	self _instancesAreArrayed ifFalse: [self errorNotIndexable].
-	^self _instancesHavePointers
+	self instancesAreArrayed ifFalse: [self errorNotIndexable].
+	^self instancesHavePointers
 		ifTrue: [self primitiveNewPointers: size + self instSize]
 		ifFalse: [self primitiveNewBytes: size]
 ]
@@ -471,10 +452,5 @@ Species >> withAllSuperclasses [
 Species >> withAllSuperclassesDo: aBlock [
 	aBlock evaluateWith: self.
 	self allSuperclassesDo: aBlock
-]
-
-{ #category : #'instance creation' }
-Species >> zero: size bytesOf: object [
-	object _zeroSlots: (size bitShift: 0 - WordSizeShift)
 ]
 

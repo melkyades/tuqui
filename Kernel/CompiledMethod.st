@@ -11,7 +11,7 @@ Class {
 	#type : #variable,
 	#instVars : [
 		'format',
-		'optimizedCode',
+		'executableCode',
 		'astcodes',
 		'class',
 		'selector',
@@ -163,17 +163,7 @@ CompiledMethod >> environmentCount: anInteger [
 
 { #category : #accessing }
 CompiledMethod >> executableCode [
-	^optimizedCode
-]
-
-{ #category : #evaluation }
-CompiledMethod >> executeOn: receiver withArguments: anArray [
-	| size |
-	self prepareForExecution.
-	size := anArray basicSize.
-	self argumentCount = size ifFalse: [^self error: 'incorrect arity'].
-	anArray _expandInStackSized: size.
-	^receiver _invoke: self validOptimizedCodeAddress _asNative
+	^executableCode
 ]
 
 { #category : #services }
@@ -207,8 +197,8 @@ CompiledMethod >> hash [
 ]
 
 { #category : #accessing }
-CompiledMethod >> hasOptimizedCode [
-	^optimizedCode != nil
+CompiledMethod >> hasExecutableCode [
+	^executableCode != nil
 ]
 
 { #category : #initialization }
@@ -223,14 +213,9 @@ CompiledMethod >> install [
 ]
 
 { #category : #accessing }
-CompiledMethod >> invalidateOptimizedCode [
-	optimizedCode := nil.
-	self blocksDo: [:b | b invalidateOptimizedCode]
-]
-
-{ #category : #testing }
-CompiledMethod >> isCallback [
-	^false
+CompiledMethod >> invalidateExecutableCode [
+	executableCode := nil.
+	self blocksDo: [:b | b invalidateExecutableCode]
 ]
 
 { #category : #testing }
@@ -265,23 +250,12 @@ CompiledMethod >> isFFIMethod [
 
 { #category : #unclassified }
 CompiledMethod >> isNativized [
-	^false == (optimizedCode == nil)
+	^executableCode !== notNil
 ]
 
 { #category : #testing }
 CompiledMethod >> isOverridden [
 	^false
-]
-
-{ #category : #accessing }
-CompiledMethod >> literalIndexFrom: grossIndex [
-	| instVars index |
-	grossIndex _isSmallInteger ifFalse: [^self outOfBoundsIndex: grossIndex].
-	instVars := self class instSize.
-	(1 <= grossIndex and: [grossIndex <= (self _size - instVars)])
-		ifFalse: [^self outOfBoundsIndex: grossIndex].
-	index := grossIndex + instVars.
-	^index
 ]
 
 { #category : #accessing }
@@ -295,20 +269,20 @@ CompiledMethod >> method [
 ]
 
 { #category : #accessing }
-CompiledMethod >> optimizedCode [
-	^optimizedCode
+CompiledMethod >> executableCode [
+	^executableCode
 ]
 
 { #category : #accessing }
-CompiledMethod >> optimizedCode: anObject [
+CompiledMethod >> executableCode: anObject [
 	code method: self.
-	optimizedCode := anObject
+	executableCode := anObject
 ]
 
 { #category : #accessing }
-CompiledMethod >> optimizedCodeAddress [
+CompiledMethod >> executableCodeAddress [
 	self prepareForExecution.
-	^optimizedCode optimizedCodeAddress
+	^executableCode executableCodeAddress
 ]
 
 { #category : #copying }
@@ -319,7 +293,7 @@ CompiledMethod >> postCopy [
 			b isBlock ifTrue: [
 				c := b copy method: self.
 				self at: i put: c]];
-		updateOptimizedCode
+		updateExecutableCode
 ]
 
 { #category : #unclassified }
@@ -348,7 +322,7 @@ CompiledMethod >> selector [
 { #category : #accessing }
 CompiledMethod >> selector: aSymbol [
 	selector := aSymbol.
-	optimizedCode notNil ifTrue: [self invalidateOptimizedCode; nativize]
+	executableCode notNil ifTrue: [self invalidateExecutableCode; nativize]
 ]
 
 { #category : #accessing }
@@ -358,7 +332,7 @@ CompiledMethod >> selectorAt: index [
 
 { #category : #accessing }
 CompiledMethod >> sendSites [
-	^optimizedCode sendSites
+	^executableCode sendSites
 ]
 
 { #category : #'source code support' }
@@ -389,13 +363,8 @@ CompiledMethod >> timestamp [
 ]
 
 { #category : #accessing }
-CompiledMethod >> updateOptimizedCode [
-	optimizedCode ifNil: [^self].
-	self invalidateOptimizedCode; prepareForExecution
-]
-
-{ #category : #unclassified }
-CompiledMethod >> validOptimizedCodeAddress [
-	^optimizedCode code _asSmallInteger
+CompiledMethod >> updateExecutableCode [
+	executableCode ifNil: [^self].
+	self invalidateExecutableCode; prepareForExecution
 ]
 
