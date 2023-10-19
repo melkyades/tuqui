@@ -6,6 +6,7 @@
 
 Class {
 	#name : #Object,
+	#superclass : #ProtoObject,
 	#category : #Kernel
 }
 
@@ -27,22 +28,12 @@ Object >> ASSERT: aBoolean [
 
 { #category : #private }
 Object >> at: anInteger [
-	^self errorVMSpecific
+	<primitive: At>
 ]
 
 { #category : #private }
 Object >> at: anInteger put: anObject [
-	^self errorVMSpecific
-]
-
-{ #category : #private }
-Object >> beWeak [
-	^self errorVMSpecific
-]
-
-{ #category : #private }
-Object >> beWeak: aBoolean [
-	^self errorVMSpecific
+	<primitive: AtPut>
 ]
 
 { #category : #accessing }

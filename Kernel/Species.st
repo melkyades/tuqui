@@ -339,6 +339,11 @@ Species >> kindOfSubclass [
 	self error: 'invalid type of subclass'
 ]
 
+{ #category : #unclassified }
+Species >> loadClass: name [
+	<primitive: LoadClass>
+]
+
 { #category : #private }
 Species >> memory [
 	^Memory current
@@ -377,12 +382,12 @@ Species >> primitiveNew: size [
 
 { #category : #unclassified }
 Species >> primitiveNewBytes: size [
-	<primitive: NewBytes>
+	<primitive: NewBytesSized>
 ]
 
 { #category : #unclassified }
 Species >> primitiveNewPointers: size [
-	<primitive: NewArrayedPointers>
+	<primitive: NewPointersSized>
 ]
 
 { #category : #printing }

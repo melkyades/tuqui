@@ -161,7 +161,7 @@ Symbol >> existingSymbol [
 
 { #category : #services }
 Symbol >> flushCacheFor: species [
-	self errorVMspecific
+	<primitive: FlushSymbol>
 ]
 
 { #category : #private }

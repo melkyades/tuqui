@@ -80,29 +80,6 @@ CompiledBlock >> arity [
 ]
 
 { #category : #accessing }
-CompiledBlock >> aspects [
-	^#(#arity
-		#blockNumber
-		#method
-		#hasMethodEnvironment
-		#tempCount
-		#templateIndex)
-]
-
-{ #category : #comparing }
-CompiledBlock >> basicPrintOn: aStream [
-	method printOn: aStream.
-	aStream
-		nextPutAll: '. Block number: ';
-		nextPutAll: self blockNumber printString;
-		nextPutAll: ', ';
-		nextPutAll: self argumentCount printString;
-		nextPutAll: ' args, ';
-		nextPutAll: self tempCount printString;
-		nextPutAll: ' temps. '
-]
-
-{ #category : #accessing }
 CompiledBlock >> bindMethod: aCompiledMethod [
 	method := aCompiledMethod
 ]
@@ -238,27 +215,6 @@ CompiledBlock >> executableCode: anObject [
 	executableCode := anObject
 ]
 
-{ #category : #comparing }
-CompiledBlock >> printOn: aStream [
-	self class printOn: aStream.
-	aStream nextPut: $(.
-	self basicPrintOn: aStream.
-	(1 to: self size)
-		do: [:i | | field tag rest |
-			field := self at: i.
-			field ifNil: [aStream nextPutAll: 'nil'] ifNotNil: [
-				tag := field bitShift: -27.
-				rest := field bitAnd: 16r7FFFFFF.
-				aStream
-					nextPut: $[;
-					nextPutAll: tag asString;
-					space;
-					nextPutAll: rest asString;
-					nextPut: $]]]
-		separatedBy: [aStream space].
-	aStream nextPut: $)
-]
-
 { #category : #accessing }
 CompiledBlock >> tempCount [
 	^format bitsAt: TempCount
@@ -282,17 +238,3 @@ CompiledBlock >> templateIndex [
 CompiledBlock >> temporaryLimit [
 	^(1 bitShift: TempCount length) - 1
 ]
-
-{ #category : #isEvaluating }
-CompiledBlock >> valueSelector [
-	| arity |
-	arity := self arity.
-	arity = 0 ifTrue: [^#value].
-	arity = 1 ifTrue: [^#value:].
-	arity = 2 ifTrue: [^#value:value:].
-	arity = 3 ifTrue: [^#value:value:value:].
-	arity = 4 ifTrue: [^#value:value:value:value:].
-	self ASSERT: false.
-	^#valueWithArguments:
-]
-

@@ -12,34 +12,34 @@ Class {
 	#instVars : [
 		'format',
 		'executableCode',
-		'astcodes',
+		'treecodes',
 		'class',
 		'selector',
 		'source'
 	],
 	#classVars : [
-		'Flags'
+		'ArgCount',
+		'BlockCount',
+		'TempCount',
+		'CapturesSelf',
+		'HasEnvironment',
+		'HasFrame',
+		'Debuggable',
+		'EnvCount'
 	],
 	#category : #Kernel
 }
 
-{ #category : #inspecting }
-CompiledMethod class >> aspects [
-	^#(#astcodeString #disassembledText)
-]
-
 { #category : #initialization }
 CompiledMethod class >> initializeFormatFlags [
-	Flags := self addNamespace.
-	Flags
-		at: #ArgCount put: (1 thru: 6);
-		at: #BlockCount put: (7 thru: 13);
-		at: #TempCount put: (14 thru: 21);
-		at: #CapturesSelf put: (1 bitShift: 22 - 1);
-		at: #HasEnvironment put: (1 bitShift: 23 - 1);
-		at: #HasFrame put: (1 bitShift: 24 - 1);
-		at: #Debuggable put: (1 bitShift: 25 - 1);
-		at: #EnvCount put: (26 thru: 31)
+	ArgCount := (1 thru: 6).
+	BlockCount := (7 thru: 13).
+	TempCount := (14 thru: 21).
+	CapturesSelf := (1 bitShift: 22 - 1).
+	HasEnvironment := (1 bitShift: 23 - 1).
+	HasFrame := (1 bitShift: 24 - 1).
+	Debuggable := (1 bitShift: 25 - 1).
+	EnvCount := (26 thru: 31)
 ]
 
 { #category : #initialization }
@@ -62,12 +62,6 @@ CompiledMethod class >> new: anInteger [
 	| cm |
 	cm := super new: anInteger.
 	^cm initialize
-]
-
-{ #category : #comparing }
-CompiledMethod >> ~ aCompiledMethod [
-	self literals = aCompiledMethod literals ifFalse: [^false].
-	^astcodes = aCompiledMethod astcodes
 ]
 
 { #category : #comparing }
@@ -122,13 +116,13 @@ CompiledMethod >> blocksDo: aBlock [
 ]
 
 { #category : #accessing }
-CompiledMethod >> astcodes [
-	^astcodes
+CompiledMethod >> treecodes [
+	^treecodes
 ]
 
 { #category : #accessing }
-CompiledMethod >> astcodes: aByteArray [
-	astcodes := aByteArray
+CompiledMethod >> treecodes: aByteArray [
+	treecodes := aByteArray
 ]
 
 { #category : #testing }
@@ -168,7 +162,7 @@ CompiledMethod >> executableCode [
 
 { #category : #services }
 CompiledMethod >> flushFromCaches [
-	self errorVMSpecific
+	<primitive: FlushMethod>
 ]
 
 { #category : #accessing }
@@ -307,11 +301,8 @@ CompiledMethod >> primitiveNumber [
 ]
 
 { #category : #printing }
-CompiledMethod >> printOn: aStream [
-	aStream
-		print: class;
-		nextPutAll: '>>';
-		print: selector
+CompiledMethod >> printString [
+	class printString, '>>', selector
 ]
 
 { #category : #accessing }
@@ -353,13 +344,6 @@ CompiledMethod >> tempCount [
 { #category : #accessing }
 CompiledMethod >> tempCount: anInteger [
 	format := format bitsAt: TempCount put: anInteger
-]
-
-{ #category : #accessing }
-CompiledMethod >> timestamp [
-	| s |
-	s := self sourceReference.
-	^(s respondsTo: #timestamp) ifTrue: [s timestamp]
 ]
 
 { #category : #accessing }

@@ -25,44 +25,49 @@ ProtoObject >> = other [
 	^self == other
 ]
 
+{ #category : #comparing }
+ProtoObject >> == other [
+	<primitive: Equal>
+]
+
 { #category : #accessing }
 ProtoObject >> basicAt: anInteger [
-	^self errorVMSpecific
+	<primitive: BasicAt>
 ]
 
 { #category : #private }
 ProtoObject >> basicAt: anInteger put: anObject [
-	^self errorVMSpecific
+	<primitive: BasicAtPut>
 ]
 
 { #category : #system }
 ProtoObject >> basicHash [
-	^self errorVMSpecific
+	<primitive: Hash>
 ]
 
 { #category : #system }
 ProtoObject >> basicHash: anInteger [
-	self errorVMSpecific
+	<primitive: BasicHashPut>
 ]
 
 { #category : #private }
 ProtoObject >> basicSize [
-	^self errorVMSpecific
+	<primitive: BasicSize>
 ]
 
 { #category : #services }
 ProtoObject >> become: anotherObject [
-	self errorVMSpecific
+	<primitive: Become>
 ]
 
 { #category : #'meta accessing' }
 ProtoObject >> behavior [
-	^self errorVMSpecific
+	<primitive: Behavior>
 ]
 
 { #category : #'meta accessing' }
 ProtoObject >> behavior: aBehavior [
-	^self errorVMSpecific
+	<primitive: SetBehavior>
 ]
 
 { #category : #system }
@@ -83,12 +88,12 @@ ProtoObject >> doesNotUnderstand: aMessage [
 
 { #category : #errors }
 ProtoObject >> error: aString [
-	^self errorVMSpecific
+	<primitive: Error>
 ]
 
 { #category : #system }
 ProtoObject >> halt [
-	^self errorVMSpecific
+	<primitive: Halt>
 ]
 
 { #category : #accessing }
@@ -120,12 +125,12 @@ ProtoObject >> ifNotNil: aBlock [
 
 { #category : #system }
 ProtoObject >> instVarAt: i [
-	^self errorVMSpecific
+	<primitive: InstVarAt>
 ]
 
 { #category : #system }
 ProtoObject >> instVarAt: i put: anObject [
-	^self errorVMSpecific
+	<primitive: InstVarAtPut>
 ]
 
 { #category : #system }
@@ -140,7 +145,7 @@ ProtoObject >> notNil [
 
 { #category : #system }
 ProtoObject >> perform: aSymbol [
-	^self errorVMSpecific
+	<primitive: Perform>
 ]
 
 { #category : #system }
@@ -150,7 +155,7 @@ ProtoObject >> perform: aSymbol with: anObject [
 
 { #category : #system }
 ProtoObject >> perform: aSymbol withArguments: anArray [
-	^self errorVMSpecific
+	<primitive: PerformWithArguments>
 ]
 
 { #category : #system }

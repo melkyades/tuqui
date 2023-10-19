@@ -177,7 +177,7 @@ SmallInteger >> bitAt: anInteger [
 { #category : #bits }
 SmallInteger >> bitOr: anInteger [
 	anInteger _isSmallInteger ifFalse: [^anInteger bitOr: self].
-	^self _smiBitOr: self
+	^self _smiBitOr: anInteger
 ]
 
 { #category : #bits }
@@ -206,7 +206,8 @@ SmallInteger >> bitShiftRight: anInteger [
 
 { #category : #bits }
 SmallInteger >> bitXor: anInteger [
-	^anInteger bitXor: self
+	anInteger _isSmallInteger ifFalse: [^anInteger bitXor: self].
+	^self _smiBitXor: anInteger
 ]
 
 { #category : #accessing }

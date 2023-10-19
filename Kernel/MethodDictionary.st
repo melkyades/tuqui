@@ -12,17 +12,17 @@ Class {
 
 { #category : #constants }
 MethodDictionary class >> basicNew [
-	<primitive: NewMethodDictionary>
+	<primitive: VMDictionaryNew>
 ]
 
 { #category : #accessing }
 MethodDictionary >> at: aSymbol [
-	<primitive: MethodDictionaryAt>
+	<primitive: VMDictionaryAt>
 ]
 
 { #category : #accessing }
 MethodDictionary >> at: aSymbol put: aCompiledMethod [
-	<primitive: MethodDictionaryAtPut>
+	<primitive: VMDictionaryAtPut>
 ]
 	
 { #category : #copying }
@@ -42,6 +42,11 @@ MethodDictionary >> isMethodDictionary [
 	^true
 ]
 
+{ #category : #accessing }
+MethodDictionary >> keys [
+	<primitive: VMDictionaryKeys>
+]
+
 { #category : #copying }
 MethodDictionary >> postCopy [
 	table := table copy owner: self
@@ -49,6 +54,6 @@ MethodDictionary >> postCopy [
 
 { #category : #removing }
 MethodDictionary >> removeKey: aSymbol [
-	<primitive: MethodDictionaryRemoveKey>
+	<primitive: VMDictionaryRemoveKey>
 ]
 

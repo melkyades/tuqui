@@ -13,17 +13,15 @@ Class {
 		'homeFrame'
 	],
 	#classVars : [
-		'Indexes'
+		'ReceiverIndex ParentEnvironmentIndex'
 	],
 	#category : #Kernel
 }
 
 { #category : #initialization }
 Closure class >> initializeIndexes [
-	Indexes := self addNamespace
-		at: 'ReceiverIndex' put: 1;
-		at: 'ParentEnvironmentIndex' put: 2;
-		yourself
+	ReceiverIndex := 1.
+	ParentEnvironmentIndex := 2
 ]
 
 { #category : #gs }
@@ -51,18 +49,6 @@ Closure >> arity [
 ]
 
 { #category : #errors }
-Closure >> arityError: anInteger [
-	| arity msg count |
-	arity := block argumentCount.
-	count := anInteger = 0 ifTrue: ['none'] ifFalse: [anInteger asString].
-	msg := 'The ' , self class name , ' expects ' , arity printString
-		, (' argument' pluralize: arity > 1)
-		, ', but was called with '
-		, count.
-	^self error: msg
-]
-
-{ #category : #errors }
 Closure >> basicAt: anInteger [
 	anInteger _isSmallInteger ifFalse: [^self outOfBoundsIndex: anInteger].
 	(1 <= anInteger and: [anInteger <= self _size])
@@ -78,17 +64,6 @@ Closure >> block [
 { #category : #accessing }
 Closure >> blockNumber [
 	^block blockNumber
-]
-
-{ #category : #converting }
-Closure >> canReturn [
-	| env |
-	homeFrame == nil ifTrue: [^false].
-	homeFrame stackPointer < self _thisContext ifTrue: [^false].
-	homeFrame hasBlocks ifFalse: [^false].
-	env := self methodEnvironment.
-	homeFrame environment == env ifTrue: [^true].
-	^homeFrame methodEnvironment == env
 ]
 
 { #category : #evaluating }
@@ -111,23 +86,18 @@ Closure >> evaluate [
 ]
 
 { #category : #handling }
-Closure >> evaluateAtomically [
-	self errorVMSpecific
-]
-
-{ #category : #handling }
 Closure >> evaluateFor: anObject [
 	^self value: anObject
 ]
 
 { #category : #handling }
 Closure >> evaluateWith: value [
-	self errorVMSpecific
+	<primitive: ClosureValueWith>
 ]
 
 { #category : #handling }
 Closure >> evaluateWith: anObject with: anotherObject [
-	self errorVMSpecific
+	<primitive: ClosureValueWithWith>
 ]
 
 { #category : #evaluating }
@@ -139,31 +109,6 @@ Closure >> evaluateWithArguments: anArray [
 		ifTrue: [anArray copyFrom: 1 to: n]
 		ifFalse: [anArray].
 	^self valueWithArguments: args
-]
-
-{ #category : #handling }
-Closure >> fork [
-	^self newProcess fork
-]
-
-{ #category : #handling }
-Closure >> forkAt: aNumber [
-	^self forkAt: aNumber named: 'forked from block'
-]
-
-{ #category : #handling }
-Closure >> forkAt: aNumber named: aString [
-	^self newProcess name: aString; priority: aNumber; fork
-]
-
-{ #category : #handling }
-Closure >> forkNamed: aString [
-	^self forkAt: Processor activePriority named: aString
-]
-
-{ #category : #handling }
-Closure >> forkThread [
-	^Thread newOn: self
 ]
 
 { #category : #handling }
@@ -211,33 +156,9 @@ Closure >> newProcess [
 	^Process sending: #value to: self
 ]
 
-{ #category : #handling }
-Closure >> newProcessWith: anArray [
-	| message |
-	message := MessageSend
-		receiver: self
-		selector: #valueWithArguments:
-		argument: anArray.
-	^Process evaluating: message
-]
-
 { #category : #accessing }
 Closure >> numArgs [
 	^self argumentCount
-]
-
-
-{ #category : #handling }
-Closure >> printOn: aStream [
-	self class printOn: aStream.
-	aStream nextPut: $(.
-	block basicPrintOn: aStream.
-	(1 to: self size)
-		do: [:i | | field |
-			field := self at: i.
-			field printOn: aStream]
-		separatedBy: [aStream space].
-	aStream nextPut: $)
 ]
 
 { #category : #handling }
@@ -274,22 +195,22 @@ Closure >> templateIndex [
 
 { #category : #handling }
 Closure >> value [
-	<primitive: Value>
+	<primitive: ClosureValue>
 ]
 
 { #category : #handling }
 Closure >> value: value [
-	<primitive: ValueWith>
+	<primitive: ClosureValueWith>
 ]
 
 { #category : #handling }
 Closure >> value: first value: second [
-	<primitive: ValueWithWith>
+	<primitive: ClosureValueWithWith>
 ]
 
 { #category : #handling }
 Closure >> value: first value: second value: third [
-	<primitive: ValueWithWithWith>
+	<primitive: ClosureValueWithWithWith>
 ]
 
 { #category : #evaluating }
@@ -307,7 +228,7 @@ Closure >> valueSelector [
 
 { #category : #handling }
 Closure >> valueWithArguments: arguments [
-	<primitive: ValueWithArguments>
+	<primitive: ClosureValueWithArguments>
 
 ]
 
@@ -318,7 +239,7 @@ Closure >> whileFalse [
 
 { #category : #handling }
 Closure >> whileFalse: aBlock [
-	<primitive: WhileFalse>
+	<primitive: ClosureWhileFalse>
 
 ]
 
@@ -329,6 +250,6 @@ Closure >> whileTrue [
 
 { #category : #handling }
 Closure >> whileTrue: aBlock [
-	<primitive: WhileTrue>
+	<primitive: ClosureWhileTrue>
 ]
 

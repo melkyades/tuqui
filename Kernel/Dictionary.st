@@ -350,28 +350,6 @@ Dictionary >> select: selectBlock thenCollect: collectBlock [
 	^answer
 ]
 
-{ #category : #printing }
-Dictionary >> storeOn: aStream [
-	| first |
-	self isEmpty
-		ifTrue: [^aStream nextPutAll: self class name; nextPutAll: ' new'].
-	first := true.
-	aStream
-		nextPut: $(;
-		nextPutAll: self class name;
-		nextPutAll: ' new'.
-	self associationsDo: [:assoc | 
-		first ifFalse: [aStream nextPut: $;].
-		aStream crtab; nextPutAll: 'add: '.
-		assoc storeOn: aStream.
-		first := false].
-	aStream
-		nextPut: $;;
-		crtab;
-		nextPutAll: 'yourself';
-		nextPut: $)
-]
-
 { #category : #testing }
 Dictionary >> storesAssociations [
 	^true

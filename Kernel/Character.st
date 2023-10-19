@@ -124,12 +124,6 @@ Character >> isCharacter [
 	^true
 ]
 
-{ #category : #printing }
-Character >> printOn: aStream [
-	self isUnicode ifTrue: [aStream beUnicode].
-	aStream nextPut: $$; nextPut: self
-]
-
 { #category : #private }
 Character >> setValue: anInteger [
 	value := anInteger

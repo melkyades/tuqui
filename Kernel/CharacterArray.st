@@ -17,10 +17,6 @@ CharacterArray >> < aString [
 { #category : #comparing }
 CharacterArray >> <= aString [
 	| iterations |
-	self isUnicode == aString isUnicode ifFalse: [
-		^(self isSymbol or: [aString isSymbol])
-			ifTrue: [self asWideSymbol <= aString asWideSymbol]
-			ifFalse: [self asWideString <= aString asWideString]].
 	iterations := self size min: aString size.
 	1 to: iterations do: [:i | | a b |
 		a := (self at: i) asLowercase.

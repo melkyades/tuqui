@@ -681,11 +681,6 @@ SequenceableCollection >> third [
 	^self at: 3
 ]
 
-{ #category : #evaluating }
-SequenceableCollection >> value: object1 value: object2 [
-	^[object1 <= object2] on: Error do: [object2 >= object1]
-]
-
 { #category : #enumerating }
 SequenceableCollection >> with: aCollection collect: aBlock in: rCollection [
 	| n |
