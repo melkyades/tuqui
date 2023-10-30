@@ -31,21 +31,6 @@ Species class >> maxInstVarCount [
 	^16r7F
 ]
 
-{ #category : #testing }
-Species >> instancesAreArrayed [
-	^format & Variable = Variable
-]
-
-{ #category : #testing }
-Species >> instancesAreFixed [
-	^format & Variable = 0
-]
-
-{ #category : #testing }
-Species >> instancesHavePointers [
-	^format & Pointers != 0
-]
-
 { #category : #accessing }
 Species >> >> aSelector [
 	^self compiledMethodAt: aSelector
@@ -275,19 +260,24 @@ Species >> instanceBehavior [
 	^instanceBehavior
 ]
 
+{ #category : #testing }
+Species >> instancesAreArrayed [
+	^format & Variable = Variable
+]
+
+{ #category : #testing }
+Species >> instancesAreFixed [
+	^format & Variable = 0
+]
+
 { #category : #private }
 Species >> instanceBehavior: aBehavior [
 	instanceBehavior := aBehavior
 ]
 
 { #category : #testing }
-Species >> instancesAreArrayed [
-	^self instancesAreArrayed
-]
-
-{ #category : #testing }
 Species >> instancesHavePointers [
-	^self instancesHavePointers
+	^format & Pointers != 0
 ]
 
 { #category : #services }

@@ -190,7 +190,7 @@ ArrayedCollection >> select: selectBlock thenCollect: collectBlock [
 
 { #category : #accessing }
 ArrayedCollection >> size [
-	^self primitiveSize
+	^self _size
 ]
 
 { #category : #enumerating }

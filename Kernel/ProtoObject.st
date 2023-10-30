@@ -32,12 +32,12 @@ ProtoObject >> == other [
 
 { #category : #accessing }
 ProtoObject >> basicAt: anInteger [
-	<primitive: BasicAt>
+	<primitive: At>
 ]
 
 { #category : #private }
 ProtoObject >> basicAt: anInteger put: anObject [
-	<primitive: BasicAtPut>
+	<primitive: AtPut>
 ]
 
 { #category : #system }

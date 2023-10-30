@@ -12,7 +12,7 @@ Class {
 
 { #category : #converting }
 Object >> -> anObject [
-	^Association key: self value: anObject
+	^Association new key: self; value: anObject
 ]
 
 { #category : #comparing }

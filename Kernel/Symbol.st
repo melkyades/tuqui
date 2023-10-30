@@ -263,6 +263,11 @@ Symbol >> shallowCopy [
 	^self
 ]
 
+{ #category : #marshalling }
+Symbol >> shortAtOffset: offset [
+	<primitive: SymbolShortAtOffset>
+]
+
 { #category : #accessing }
 Symbol >> size [
 	^self _size - 1
