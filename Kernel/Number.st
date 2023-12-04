@@ -21,6 +21,11 @@ Number class >> new: anInteger [
 ]
 
 { #category : #arithmetic }
+Number class >> zero [
+	^0
+]
+
+{ #category : #arithmetic }
 Number >> \\ aNumber [
 	^self - (self // aNumber * aNumber)
 ]

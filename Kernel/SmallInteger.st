@@ -272,11 +272,34 @@ SmallInteger >> isSmallInteger [
 	^true
 ]
 
-
 { #category : #unclassified }
 SmallInteger >> negated [
 	self = Minimum ifTrue: [^Maximum + 1].
 	^super negated
+]
+
+{ #category : #unclassified }
+SmallInteger >> printString [
+        | result abs digitValue char|
+
+        self = 0 ifTrue: [^ '0'].
+
+        result := ''.
+
+        abs := self abs.
+        [abs > 0] whileTrue: [
+            digitValue := abs \\ 10.
+			char := String new: 1.
+			char byteAt: 1 put: digitValue + 48.
+            result := char, result.
+            abs := abs // 10.
+        ].
+
+        self < 0 ifTrue: [
+            result := '-', result.
+        ].
+
+        ^ result.
 ]
 
 { #category : #arithmetic }
