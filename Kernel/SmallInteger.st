@@ -194,7 +194,7 @@ SmallInteger >> bitShiftLeft: anInteger [
 	anInteger < (WordSize * 8 - 1) ifTrue: [
 		result := self _bitShiftLeft: anInteger.
 		result ifNotNil: [^result]].
-	^self error: 'too big'].
+	^self error: 'too big'.
 ]
 
 { #category : #unclassified }
