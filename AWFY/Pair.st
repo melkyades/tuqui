@@ -1,0 +1,49 @@
+"
+    Copyright (c) 2020 Aucerna.
+	Copyright (c) 2009-2018 Stefan Marr <git@stefan-marr.de>
+    See license in root and /Performance/Benchmarks directories.
+"
+
+Class {
+	#name : #Pair,
+	#superclass : #Object,
+	#instVars : [
+		'key',
+		'value'
+	],
+	#category : #AWFY
+}
+
+{ #category : #'as yet unclassified' }
+Pair class >> withKey: aKey andValue: aValue [
+
+    ^ self new initialize: aKey and: aValue
+]
+
+{ #category : #'as yet unclassified' }
+Pair >> initialize: aKey and: aValue [
+
+    key   := aKey.
+    value := aValue.
+]
+
+{ #category : #'as yet unclassified' }
+Pair >> key [
+ ^ key 
+]
+
+{ #category : #'as yet unclassified' }
+Pair >> key: aKey [
+ key   := aKey 
+]
+
+{ #category : #'as yet unclassified' }
+Pair >> value [
+ ^ value 
+]
+
+{ #category : #'as yet unclassified' }
+Pair >> value: aValue [
+ value := aValue 
+]
+

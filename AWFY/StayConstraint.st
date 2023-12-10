@@ -1,0 +1,25 @@
+"
+    Copyright (c) 2020 Aucerna.
+	Copyright (c) 2009-2018 Stefan Marr <git@stefan-marr.de>
+    See license in root and /Performance/Benchmarks directories.
+"
+
+Class {
+	#name : #StayConstraint,
+	#superclass : #UnaryConstraint,
+	#category : #AWFY
+}
+
+{ #category : #'as yet unclassified' }
+StayConstraint class >> var: aVariable strength: strengthSymbol addTo: planner [
+
+    "Install a stay constraint with the given strength on the given variable."
+
+    ^ self new initializeVar: aVariable strength: strengthSymbol addTo: planner
+]
+
+{ #category : #'as yet unclassified' }
+StayConstraint >> execute [
+
+]
+
